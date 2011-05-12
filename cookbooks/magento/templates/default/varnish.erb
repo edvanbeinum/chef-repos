@@ -1,0 +1,114 @@
+# Setup a cluster of backend servers
+backend www1 {
+  .host = "localhost";
+  .port = "8080";
+}
+# Create a backend directory to implement loadbalancing across
+# the cluster of servers
+director backend_director random {
+    .retries = 5;
+    { .backend = www1; .weight = 1; }
+}
+# Limit the perge request to localhost
+acl purge {
+  "localhost";
+}
+
+sub vcl_recv {
+
+  set req.backend = backend_director;
+
+  if (req.request == "PURGE") {
+    if (!client.ip ~ purge) {
+      error 405 "Not allowed.";
+    }
+    if (req.url ~ "varnish/index/purgeall/key/#Fj1nzljh") {
+      purge( ".*" );
+    }
+  }
+
+  if (req.request != "GET" &&
+    req.request != "HEAD" &&
+    req.request != "PUT" &&
+    req.request != "POST" &&
+    req.request != "TRACE" &&
+    req.request != "OPTIONS" &&
+    req.request != "DELETE") {
+    return (pipe);
+  }
+
+  # Do not cache POST requests
+  if (req.request == "POST") {
+    return (pipe);
+  }
+
+  # We should not cache any page for Magento backend
+  if (req.request == "GET" && 
+      (
+        req.url ~ "^/<%= node[:magento][:app][:admin_frontname] %>" || 
+        req.url ~ "^/index.php/<%= node[:magento][:app][:admin_frontname] %>"
+      ))
+  {
+    return (pass);
+  }
+
+  # We should not cache any page for checkout and customer modules
+  if (req.request == "GET" && (req.url ~ "^/checkout" || req.url ~ "^/customer"))
+  {
+    return (pass);
+  }
+
+  # Do not cache till session end
+  if (req.http.cookie ~ "nocache_stable") {
+    return (pass);
+  }
+
+  # Unique identifier which tells Varnish to use cache or not
+  if (req.http.cookie ~ "nocache") {
+    return (pass);
+  }
+
+  if (req.request == "GET" && (req.url ~ "\.(png|jpg|jpeg|gif)$" || req.url ~ "print.css")) {
+    return(lookup);
+  }
+
+  # Even though there are few possible values for Accept-Encoding, Varnish treats
+  # them literally rather than semantically, so even a small difference which makes
+  # no difference to the backend can reduce cache efficiency by making Varnish cache
+  # too many different versions of an object.
+  # http://varnish.projects.linpro.no/wiki/FAQ/Compression
+  if (req.http.Accept-Encoding) {
+    if (req.url ~ "\.(jpg|png|gif|gz|tgz|bz2|tbz|mp3|ogg)$") {
+      # No point in compressing these
+      remove req.http.Accept-Encoding;
+    } elsif (req.http.Accept-Encoding ~ "gzip") {
+      set req.http.Accept-Encoding = "gzip";
+    } elsif (req.http.Accept-Encoding ~ "deflate") {
+      set req.http.Accept-Encoding = "deflate";
+    } else {
+      # unkown algorithm
+      remove req.http.Accept-Encoding;
+    }
+  }
+
+  return (lookup);
+}
+
+sub vcl_fetch {
+  esi;
+  return (deliver);
+}
+
+sub vcl_deliver {
+  # Set a cache header to allow us to inspect the response
+  # headers during testing
+  if (obj.hits > 0) {
+    set resp.http.X-Cache = "HIT";
+  } else {
+    set resp.http.X-Cache = "MISS";
+  }
+
+  if (req.http.Cookie !~ "nocache" && resp.http.Set-Cookie !~ "nocache") {
+    unset resp.http.Set-Cookie;
+  }
+}
