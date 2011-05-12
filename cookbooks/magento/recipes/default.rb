@@ -20,3 +20,6 @@
 include_recipe "magento::php"
 include_recipe "magento::apache"
 include_recipe "magento::mysql"
+include_recipe "magento::memcached"
+include_recipe "magento::install"
+include_recipe "magento::config_local"
