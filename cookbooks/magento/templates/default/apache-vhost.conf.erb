@@ -1,11 +1,11 @@
-<VirtualHost *:<%= node[:magento][:apache][:listen_ports][0] %>>
+<VirtualHost *:<%= node[:apache][:listen_ports][0] %>>
   ServerName <%= node[:magento][:apache][:servername] %>
-  ServerAlias <% node[:apache][:server_alias].each do |a| %><%= "#{a}" %> <% end %>
-  DocumentRoot <%= node[:magento][:apache][:docroot] %>/<%= node[:apache][:servername] %><%= node[:magento][:apache][:path] %>
+  ServerAlias <% node[:magento][:apache][:server_alias].each do |a| %><%= "#{a}" %> <% end %>
+  DocumentRoot <%= node[:magento][:apache][:docroot] %>/<%= node[:magento][:apache][:servername] %><%= node[:magento][:apache][:path] %>
 
   LogLevel info
-  ErrorLog <%= node[:magento][:apache][:log_dir] %>/<%= node[:magento][:apache][:servername] %>-error.log
-  CustomLog <%= node[:magento][:apache][:log_dir] %>/<%= node[:magento][:apache][:servername] %>-access.log combined
+  ErrorLog <%= node[:apache][:log_dir] %>/<%= node[:magento][:apache][:servername] %>-error.log
+  CustomLog <%= node[:apache][:log_dir] %>/<%= node[:magento][:apache][:servername] %>-access.log combined
   
   ServerSignature Off
   
@@ -16,7 +16,7 @@
     AllowOverride All
   </Directory>
   
-  <Directory <%= node[:magento][:apache][:docroot] %>/<%= node[:apache][:servername] %><%= node[:magento][:apache][:path] %>>
+  <Directory <%= node[:magento][:apache][:docroot] %>/<%= node[:magento][:apache][:servername] %><%= node[:magento][:apache][:path] %>>
     Options FollowSymLinks                    
     
     ## Apache optimisation by disabling the .htaccess parsing
@@ -197,7 +197,7 @@
     #FileETag none
   </Directory>
   
-  <DirectoryMatch ^<%= node[:magento][:apache][:docroot] %>/<%= node[:apache][:servername] %><%= node[:magento][:apache][:path] %>/(app|downloader|error|includes|lib|media|var)$>
+  <DirectoryMatch ^<%= node[:magento][:apache][:docroot] %>/<%= node[:magento][:apache][:servername] %><%= node[:magento][:apache][:path] %>/(app|downloader|error|includes|lib|media|var)$>
       Order deny,allow
       Deny from all
     </DirectoryMatch>
