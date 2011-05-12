@@ -1,1 +1,1 @@
-include_recipe "memcahced"
+include_recipe "memcached"
