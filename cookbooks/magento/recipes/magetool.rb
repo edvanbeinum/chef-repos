@@ -1,3 +1,5 @@
+include_recipe "php::zendframework"
+
 execute "add_pear_magetool_co_uk_channel" do
  command "pear channel-discover pear.magetool.co.uk"
  not_if "pear list-channels | grep pear.magetool.co.uk"
