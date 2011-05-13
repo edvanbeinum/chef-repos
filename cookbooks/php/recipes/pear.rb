@@ -1,10 +1,9 @@
 #
 # Author::  Joshua Timberman (<joshua@opscode.com>)
-# Author::  Seth Chisamore (<schisamo@opscode.com>)
 # Cookbook Name:: php
-# Recipe:: default
+# Recipe:: pear
 #
-# Copyright 2009-2011, Opscode, Inc.
+# Copyright 2009, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,19 +18,10 @@
 # limitations under the License.
 #
 
-include_recipe "php::#{node['php']['install_method']}"
-
-include_recipe "php::module_apc"
-include_recipe "php::module_curl"
-include_recipe "php::module_memcache"
-include_recipe "php::module_mysql"
-include_recipe "php::module_gd"
-
-# update the main channels
-php_pear_channel 'pear.php.net' do
-  action :update
+package value_for_platform(["centos", "redhat", "fedora", "suse"] => { "default" => "php53u-pear" }, "default" => "php-pear") do
+  action :upgrade
 end
 
-php_pear_channel 'pecl.php.net' do
-  action :update
+execute "upgrade-pear-with-pear" do
+  command "pear upgrade pear | cat" # piping through cat appears to be the only sane way of stopping pear returning exit code 1 on no upgrade
 end

@@ -22,7 +22,7 @@ unless File.exists?("#{node[:magento][:dir]}/app/etc/local.xml")
   bash "magento-install-site" do
     cwd "#{node[:magento][:dir]}/"
     code <<-EOH
-rm -f app/etc/local.xml
+cd #{node[:magento][:dir]}/ && \
 php -f install.php -- \
 --license_agreement_accepted "yes" \
 --locale "#{node[:magento][:app][:locale]}" \
@@ -44,7 +44,7 @@ php -f install.php -- \
 --admin_lastname "#{node[:magento][:admin][:lastname]}" \
 --admin_email "#{node[:magento][:admin][:email]}" \
 --admin_username "#{node[:magento][:admin][:user]}" \
---admin_password "#{node[:magento][:admin][:password]}"
+--admin_password "#{node[:magento][:admin][:password]} | cat"
 EOH
   end
 end

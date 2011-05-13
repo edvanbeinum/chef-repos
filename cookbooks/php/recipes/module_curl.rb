@@ -19,11 +19,18 @@
 # limitations under the License.
 #
 
-case node['platform']
-when "centos", "redhat", "fedora"
-  # centos php compiled with curl
-when "debian", "ubuntu"
-  package "php5-curl" do
-    action :upgrade
+pkgs = value_for_platform(
+  [ "centos", "redhat", "fedora" ] => {
+    # centos php compiled with curl
+  },
+  [ "debian", "ubuntu" ] => {
+    "default" => %w{ php5-curl }
+  },
+  "default" => %w{ php5-curl }
+)
+
+pkgs.each do |pkg|
+  package pkg do
+    action :install
   end
 end

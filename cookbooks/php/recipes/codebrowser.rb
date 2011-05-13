@@ -25,6 +25,6 @@ execute "add_pear_components_ez_no_channel" do
 end        
 
 execute "add_php_codebrowser" do
-  command "pear install --alldeps phpunit/PHP_CodeBrowser"
+  command "pear upgrade --alldeps phpunit/PHP_CodeBrowser"
   not_if "phpunit --version | grep PHP_CodeBrowser"
 end

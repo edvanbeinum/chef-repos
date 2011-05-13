@@ -2,6 +2,7 @@ name "development"
 description "PHP Development system"
 # List of recipes and roles to apply. Requires Chef 0.8, earlier versions use 'recipes()'.
 run_list(
+  "php",
   "php::codebrowser",
   "php::codesniffer",
   "php::copypaste",
@@ -10,7 +11,7 @@ run_list(
   "php::dev",
   "php::phpmd",
   "php::phpunit",
-  "php::exdebug",
+  "php::xdebug",
   "magento::magetool"
   )
 # Attributes applied if the node doesn't have it set already.
