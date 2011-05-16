@@ -26,7 +26,7 @@ pkgs = value_for_platform(
   [ "debian", "ubuntu" ] => {
     "default" => %w{ php5-curl }
   },
-  "default" => %w{ php5-curl }
+  "default" => %w{}
 )
 
 pkgs.each do |pkg|
