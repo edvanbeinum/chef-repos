@@ -19,16 +19,12 @@
 
 include_recipe "mysql::server"
 
-require 'rubygems'
-Gem.clear_paths
-require 'mysql'
-
-execute "create #{node[:magento][:db][:database]} database" do
-  command "/usr/bin/mysqladmin -u root -p#{node[:mysql][:server_root_password]} create #{node[:magento][:db][:database]}"
-  not_if do
-    m = Mysql.new("localhost", "root", node[:mysql][:server_root_password])
-    m.list_dbs.include?(node[:magento][:db][:database])
-  end
+mysql_database "create #{node[:magento][:db][:database]} database database" do
+  host "localhost"
+  username "root"
+  password "#{node[:mysql][:server_root_password]}"
+  database "#{node[:magento][:db][:database]}"
+  action [:create_db]
 end
 
 execute "mysql-install-mage-privileges" do
