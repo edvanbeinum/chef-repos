@@ -1,16 +1,20 @@
 include_recipe "php::pear"
 
-execute "add_pear_phpunit_de_channel" do
- command "pear channel-discover pear.phpunit.de"
- not_if "pear list-channels | grep pear.phpunit.de"
+channels = [ 
+    "components.ez.no"
+]
+
+channels.each do |chan|
+  php_pear_channel chan do
+    action :discover
+  end
 end
 
-execute "add_pear_phpcpd_channel" do
- command "pear channel-discover components.ez.no"
- not_if "pear list-channels | grep components.ez.no"
+pu = php_pear_channel "pear.phpunit.de" do
+  action :discover
 end
 
-execute "install_phpcpd" do
-  command "pear install --alldeps phpunit/phpcpd"
-  not_if "pear list -a | grep phpcpd"
+php_pear "phpcpd" do
+  channel pu.channel_name
+  action :install
 end

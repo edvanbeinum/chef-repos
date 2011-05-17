@@ -4,31 +4,23 @@
 
 include_recipe "php::pear"
 
-# execute "upgrade_pear" do
-#   command "pear upgrade pear"
-# end
+channels = [
+    "pear.symfony-project.com", 
+    "components.ez.no"
+]
 
-execute "pear_set_preferred_state" do
-  command "pear config-set preferred_state beta"
-  not_if "pear config-get preferred_state | grep beta"
+channels.each do |chan|
+  php_pear_channel chan do
+    action :discover
+  end
 end
 
-execute "add_pear_phpunit_de_channel" do
- command "pear channel-discover pear.phpunit.de"
- not_if "pear list-channels | grep pear.phpunit.de"
+pu = php_pear_channel "pear.phpunit.de" do
+  action :discover
 end
 
-execute "add_pear_symfony_project_com_channel" do
-  command "pear channel-discover pear.symfony-project.com"
-  not_if "pear list-channels | grep pear.symfony-project.com"
-end      
-
-execute "add_pear_components_ez_no_channel" do
-  command "pear channel-discover components.ez.no"
-  not_if "pear list-channels | grep components.ez.no"
-end        
-
-execute "add_phpunit" do
-  command "pear install --alldeps phpunit/PHPUnit"
-  not_if "phpunit --version | grep PHPUnit"
+php_pear "PHPUnit" do
+  preferred_state "beta"
+  channel pu.channel_name
+  action :install
 end

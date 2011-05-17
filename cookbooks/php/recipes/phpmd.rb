@@ -2,17 +2,22 @@
 
 include_recipe "php::pear"
 
-execute "add_pear_phpmd_org_channel" do
- command "pear channel-discover pear.phpmd.org"
- not_if "pear list-channels | grep pear.phpmd.org"
+channels = [
+    "pear.pdepend.org"
+]
+
+channels.each do |chan|
+  php_pear_channel chan do
+    action :discover
+  end
 end
 
-execute "add_pear_pdepend_org_channel" do
-  command "pear channel-discover pear.pdepend.org"
-  not_if "pear list-channels | grep pear.pdepend.org"
-end      
+pu = php_pear_channel "pear.pdepend.org" do
+  action :discover
+end
 
-execute "add_phpmd" do
-  command "pear install --alldeps phpmd/PHP_PMD-alpha"
-  not_if "phpmd --version | grep PHPMD"
+php_pear "PHP_CodeBrowser" do
+  preferred_state "alpha"
+  channel pu.channel_name
+  action :install
 end
