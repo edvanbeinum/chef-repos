@@ -12,8 +12,8 @@ default[:magento][:app][:admin_frontname] = "admin"
 default[:magento][:app][:use_rewrites] = "yes"
 default[:magento][:app][:use_secure] = "no"
 default[:magento][:app][:use_secure_admin] = "no"
-default[:magento][:app][:multi_session_save] = "memcache" # files|db|memcache
-default[:magento][:app][:backend_cache] = "memcached" # apc|memcached|xcache|file
+default[:magento][:app][:multi_session_save] = "db" # files|db|memcache
+default[:magento][:app][:backend_cache] = "file" # apc|memcached|xcache|file
 default[:magento][:app][:backend_servers] = Array.new
 
 default[:magento][:apache][:servername] = "magento.development.local"
