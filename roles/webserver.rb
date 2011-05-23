@@ -4,7 +4,13 @@ description "PHP Webserver"
 run_list(
   "php",
   "memcached", 
-  "apache2", 
+  "apache2",
+  "apache2::mod_php5",
+  "apache2::mod_rewrite",
+  "apache2::mod_ssl",
+  "apache2::mod_deflate",
+  "apache2::mod_expires",
+  "apache2::mod_headers" ,
   "mysql::server",
   "magento"
   )
