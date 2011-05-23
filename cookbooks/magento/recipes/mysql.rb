@@ -19,7 +19,7 @@
 
 include_recipe "mysql::server"
 
-mysql_database "create #{node[:magento][:db][:database]} database database" do
+mysql_database "create #{node[:magento][:db][:database]} database" do
   host "localhost"
   username "root"
   password "#{node[:mysql][:server_root_password]}"
