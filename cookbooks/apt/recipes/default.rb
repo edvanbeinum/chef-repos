@@ -16,18 +16,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+if platform?(%w{debian ubuntu})
+    e = execute "apt-get update" do
+      action :nothing
+    end
 
-e = execute "apt-get update" do
-  action :nothing
-end
+    e.run_action(:run)
 
-e.run_action(:run)
-
-%w{/var/cache/local /var/cache/local/preseeding}.each do |dirname|
-  directory dirname do
-    owner "root"
-    group "root"
-    mode  0755
-    action :create
-  end
+    %w{/var/cache/local /var/cache/local/preseeding}.each do |dirname|
+      directory dirname do
+        owner "root"
+        group "root"
+        mode  0755
+        action :create
+      end
+    end
 end
