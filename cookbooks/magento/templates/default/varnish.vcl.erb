@@ -11,12 +11,13 @@ director backend_director random {
 }
 # Limit the perge request to localhost
 acl purge {
-  "localhost";
+  "127.0.0.1";
 }
 
 sub vcl_recv {
-
   set req.backend = backend_director;
+  
+  set req.http.Surrogate-Capability = "magento=ESI/1.0";
 
   if (req.request == "PURGE") {
     if (!client.ip ~ purge) {
@@ -27,6 +28,7 @@ sub vcl_recv {
     }
   }
 
+  # Do not cache none standard verbs
   if (req.request != "GET" &&
     req.request != "HEAD" &&
     req.request != "PUT" &&
@@ -53,6 +55,7 @@ sub vcl_recv {
   }
 
   # We should not cache any page for checkout and customer modules
+  # I would like to remove the requirement
   if (req.request == "GET" && (req.url ~ "^/checkout" || req.url ~ "^/customer"))
   {
     return (pass);
@@ -95,20 +98,23 @@ sub vcl_recv {
 }
 
 sub vcl_fetch {
-  esi;
-  return (deliver);
+    if (beresp.http.Surrogate-Control ~ "ESI/1.0") {
+        unset beresp.http.Surrogate-Control;
+        esi;
+    }
+    return (deliver);
 }
 
 sub vcl_deliver {
   # Set a cache header to allow us to inspect the response
   # headers during testing
   if (obj.hits > 0) {
-    set resp.http.X-Cache = "HIT";
+    set beresp.http.X-Cache = "HIT";
   } else {
-    set resp.http.X-Cache = "MISS";
+    set beresp.http.X-Cache = "MISS";
   }
 
   if (req.http.Cookie !~ "nocache" && resp.http.Set-Cookie !~ "nocache") {
-    unset resp.http.Set-Cookie;
+    unset beresp.http.Set-Cookie;
   }
 }

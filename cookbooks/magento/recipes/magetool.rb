@@ -1,13 +1,16 @@
+
 include_recipe "php::zendframework"
 
-execute "add_pear_magetool_co_uk_channel" do
- command "pear channel-discover pear.magetool.co.uk"
- not_if "pear list-channels | grep pear.magetool.co.uk"
+include_recipe "php::pear"
+
+mt = php_pear_channel "pear.magetool.co.uk" do
+  action :discover
 end
 
-execute "add_magetool" do
-  command "pear install magetool/magetool"
-  not_if "pear list -c pear.magetool.co.uk | grep MageTool"
+php_pear "magetool" do
+  preferred_state "beta"
+  channel mt.channel_name
+  action :install
 end
 
 # This overwrites whatever was in .zf.ini beforehand, and also is

@@ -2,12 +2,12 @@
 
 include_recipe "php::pear"
 
-execute "add_pear_pdepend_org_channel" do
- command "pear channel-discover pear.pdepend.org"
- not_if "pear list-channels | grep pear.pdepend.org"
-end     
+pd = php_pear_channel "pear.pdepend.org" do
+  action :discover
+end
 
-execute "add_php_depend" do
-  command "pear install --alldeps pdepend/PHP_Depend-beta"
-  not_if "pear list -a | grep PHP_Depend"
+php_pear "PHP_Depend" do
+  # preferred_state "beta"
+  channel pd.channel_name
+  action :install
 end

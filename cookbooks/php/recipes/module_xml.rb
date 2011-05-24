@@ -1,7 +1,8 @@
+# 
 if File.exists?("/etc/yum.repos.d/ius.repo")
-    packages = %w{ php53u-mcrypt }
+    packages = %w{ php53u-xml }
 else
-    packages = %w{ php-mcrypt }
+    packages = %w{ php53-xml }
 end
 
 pkgs = value_for_platform(
@@ -9,7 +10,7 @@ pkgs = value_for_platform(
     "default" => packages
   },
   [ "debian", "ubuntu" ] => {
-    "default" => %w{ php5-mcrypt }
+    "default" => %w{ php5-xml }
   }
 )
 
@@ -17,10 +18,4 @@ pkgs.each do |pkg|
   package pkg do
     action :install
   end
-end
-
-cookbook_file "/etc/php5/conf.d/mcrypt.ini" do
-  mode "0644"
-  source "mcrypt.ini"
-  notifies :reload, resources("service[apache2]"), :delayed
 end

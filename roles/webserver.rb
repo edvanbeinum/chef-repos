@@ -2,9 +2,17 @@ name "webserver"
 description "PHP Webserver"
 # List of recipes and roles to apply. Requires Chef 0.8, earlier versions use 'recipes()'.
 run_list(
+  "apt",
+  "php::ius",
   "php",
   "memcached", 
-  "apache2", 
+  "apache2",
+  "apache2::mod_php5",
+  "apache2::mod_rewrite",
+  "apache2::mod_ssl",
+  "apache2::mod_deflate",
+  "apache2::mod_expires",
+  "apache2::mod_headers" ,
   "mysql::server",
   "magento"
   )

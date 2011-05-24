@@ -1,6 +1,5 @@
 include_recipe "php::pear"
 
-execute "install_PhpDocumentor" do
-  command "pear install --alldeps PhpDocumentor"
-  not_if "pear list -a | grep PhpDocumentor"
+php_pear "PhpDocumentor" do
+  action :install
 end
