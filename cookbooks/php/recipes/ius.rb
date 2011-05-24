@@ -17,14 +17,17 @@
 # limitations under the License.
 #
 
-unless File.exists?("epel-release-1-1.ius.el5.noarch.rpm")
 
-  bash "epel-release" do
-    code <<-EOH
+if platform?(%w{redhat centos fedora})
+
+    bash "epel-ius-rpm-install" do
+        code <<-EOH
 wget http://dl.iuscommunity.org/pub/ius/stable/Redhat/5.5/i386/epel-release-1-1.ius.el5.noarch.rpm
 wget http://dl.iuscommunity.org/pub/ius/stable/Redhat/5.5/i386/ius-release-1.0-6.ius.el5.noarch.rpm
 rpm -Uvh ius-release*.rpm epel-release*.rpm
+yum clean all
+yum update -y
+sleep 30
 EOH
-  end
+      end
 end
-

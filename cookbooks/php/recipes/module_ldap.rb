@@ -18,9 +18,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+if File.exists?("/etc/yum.repos.d/ius.repo")
+    packages = %w{ php53u-ldap }
+else
+    packages = %w{ php53-ldap }
+end
 
 pkg = value_for_platform(
-    [ "centos", "redhat", "fedora" ] => {"default" => "php53-ldap"}, 
+    [ "centos", "redhat", "fedora" ] => {
+        "default" => packages
+    }, 
     "default" => "php5-ldap"
   )
 
