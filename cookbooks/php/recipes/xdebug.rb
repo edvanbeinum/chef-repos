@@ -1,6 +1,6 @@
 include_recipe "apache2"
 # Needed for phpize, which pecl needs
-include_recipe "php::dev"
+include_recipe "php::module_dev"
 
 php_pear "xdebug" do
   action :install
