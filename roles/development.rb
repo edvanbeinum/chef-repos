@@ -2,6 +2,7 @@ name "development"
 description "PHP Development system"
 # List of recipes and roles to apply. Requires Chef 0.8, earlier versions use 'recipes()'.
 run_list(
+  "php::ius",
   "php",
   "php::pear",
   "php::codebrowser",
@@ -9,7 +10,6 @@ run_list(
   "php::copypaste",
   "php::depend",
   "php::documentor",
-  "php::dev",
   "php::phpmd",
   "php::phpunit",
   "php::xdebug",
