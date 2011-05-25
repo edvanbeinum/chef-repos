@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe "php"
 
 case node[:platform]
 when "debian", "ubuntu"
@@ -27,11 +28,6 @@ when "arch"
     action :install
     notifies :run, resources(:execute => "generate-module-list"), :immediately
   end
-when "centos", "redhat", "fedora"
-  # package "php" do
-  #   action :install
-  #   notifies :run, resources(:execute => "generate-module-list"), :immediately
-  # end
 end
 
 apache_module "php5"
