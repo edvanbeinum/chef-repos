@@ -28,10 +28,10 @@ when "arch"
     notifies :run, resources(:execute => "generate-module-list"), :immediately
   end
 when "centos", "redhat", "fedora"
-  package "php" do
-    action :install
-    notifies :run, resources(:execute => "generate-module-list"), :immediately
-  end
+  # package "php" do
+  #   action :install
+  #   notifies :run, resources(:execute => "generate-module-list"), :immediately
+  # end
 end
 
 apache_module "php5"
