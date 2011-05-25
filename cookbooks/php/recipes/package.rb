@@ -17,15 +17,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+packages = %w{ php53-common php53 php53-devel php53-cli php-pear }
+
+if File.exists?("/etc/yum.repos.d/ius.repo")
+    packages = %w{ php53u-common php53u php53u-devel php53u-cli php53u-pear }  
+end
 
 pkgs = value_for_platform(
   [ "centos", "redhat", "fedora" ] => {
-    "default" => %w{ php53 php53-devel php53-cli php-pear }
+    "default" => packages
   },
   [ "debian", "ubuntu" ] => {
-    "default" => %w{ php5-cgi php5 php5-dev php5-cli php-pear }
+    "default" => %w{ php5-cgi php5 php5-dev php5-cli php5-common php-pear }
   },
-  "default" => %w{ php5-cgi php5 php5-dev php5-cli php-pear }
+  "default" => %w{ php5-cgi php5 php5-dev php5-cli php5-common php-pear }
 )
 
 pkgs.each do |pkg|

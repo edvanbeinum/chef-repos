@@ -19,8 +19,16 @@
 # limitations under the License.
 #
 
+if File.exists?("/etc/yum.repos.d/ius.repo")
+    packages = %w{ php53u-gd }
+else
+    packages = %w{ php53-gd }
+end
+
 pkg = value_for_platform(
-    [ "centos", "redhat", "fedora" ] => {"default" => "php53-gd"}, 
+    [ "centos", "redhat", "fedora" ] => {
+        "default" => "php53-gd"
+    }, 
     "default" => "php5-gd"
   )
 

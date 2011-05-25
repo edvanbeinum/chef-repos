@@ -1,10 +1,8 @@
 #
-# Author::  Joshua Timberman (<joshua@opscode.com>)
-# Author::  Seth Chisamore (<schisamo@opscode.com>)
-# Cookbook Name:: php
-# Recipe:: module_ldap
+# Cookbook Name:: ius
+# Recipe:: default
 #
-# Copyright 2009-2011, Opscode, Inc.
+# Copyright 2011, Alistair Stead
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,19 +16,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-if File.exists?("/etc/yum.repos.d/ius.repo")
-    packages = %w{ php53u-ldap }
-else
-    packages = %w{ php53-ldap }
-end
 
-pkg = value_for_platform(
-    [ "centos", "redhat", "fedora" ] => {
-        "default" => packages
-    }, 
-    "default" => "php5-ldap"
-  )
 
-package pkg do
-  action :install
+if platform?(%w{redhat centos fedora})
+
+    bash "epel-ius-rpm-install" do
+        code <<-EOH
+wget http://dl.iuscommunity.org/pub/ius/stable/Redhat/5.5/i386/epel-release-1-1.ius.el5.noarch.rpm
+wget http://dl.iuscommunity.org/pub/ius/stable/Redhat/5.5/i386/ius-release-1.0-6.ius.el5.noarch.rpm
+rpm -Uvh ius-release*.rpm epel-release*.rpm
+yum clean all
+yum update -y
+sleep 30
+EOH
+      end
 end
