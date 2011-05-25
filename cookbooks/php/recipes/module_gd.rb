@@ -27,7 +27,7 @@ end
 
 pkg = value_for_platform(
     [ "centos", "redhat", "fedora" ] => {
-        "default" => "php53-gd"
+        "default" => packages
     }, 
     "default" => "php5-gd"
   )
