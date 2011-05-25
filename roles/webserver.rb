@@ -3,7 +3,6 @@ description "PHP Webserver"
 # List of recipes and roles to apply. Requires Chef 0.8, earlier versions use 'recipes()'.
 run_list(
   "apt",
-  "php::ius",
   "php",
   "memcached", 
   "apache2",
