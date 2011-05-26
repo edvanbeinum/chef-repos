@@ -25,13 +25,15 @@ else
     packages = %w{ php53-gd }
 end
 
-pkg = value_for_platform(
+pkgs = value_for_platform(
     [ "centos", "redhat", "fedora" ] => {
         "default" => packages
     }, 
     "default" => "php5-gd"
   )
 
-package pkg do
-  action :install
+pkgs.each do |pkg|
+    package pkg do
+        action :install
+    end
 end
