@@ -1,3 +1,4 @@
+
 if File.exists?("/etc/yum.repos.d/ius.repo")
     packages = %w{ php53u-mcrypt }
 else
@@ -19,8 +20,9 @@ pkgs.each do |pkg|
   end
 end
 
-cookbook_file "/etc/php5/conf.d/mcrypt.ini" do
+cookbook_file "#{node['php']['ext_conf_dir']}/mcrypt.ini" do
+  owner "root"
+  group "root"
   mode "0644"
   source "mcrypt.ini"
-  notifies :reload, resources("service[apache2]"), :delayed
 end

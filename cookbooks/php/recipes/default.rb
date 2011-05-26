@@ -26,6 +26,9 @@ include_recipe "php::module_curl"
 include_recipe "php::module_memcache"
 include_recipe "php::module_mysql"
 include_recipe "php::module_gd"
+include_recipe "php::module_xml"
+include_recipe "php::module_soap"
+include_recipe "php::module_mcrypt"
 
 # update the main channels
 php_pear_channel 'pear.php.net' do

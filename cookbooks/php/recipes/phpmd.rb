@@ -12,12 +12,12 @@ channels.each do |chan|
   end
 end
 
-pu = php_pear_channel "pear.pdepend.org" do
+pu = php_pear_channel "pear.phpmd.org" do
   action :discover
 end
 
-php_pear "PHP_CodeBrowser" do
-  preferred_state "alpha"
+php_pear "PHP_PMD" do
+  #preferred_state "alpha"
   channel pu.channel_name
   action :install
 end
