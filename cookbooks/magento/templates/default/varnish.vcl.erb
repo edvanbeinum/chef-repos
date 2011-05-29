@@ -55,7 +55,7 @@ sub vcl_recv {
   }
 
   # We should not cache any page for checkout and customer modules
-  # I would like to remove the requirement
+  # TODO With the completed CSI this should no longer be the case
   if (req.request == "GET" && (req.url ~ "^/checkout" || req.url ~ "^/customer"))
   {
     return (pass);
@@ -97,11 +97,49 @@ sub vcl_recv {
   return (lookup);
 }
 
+sub vcl_hash {
+    ### these 2 entries are the default ones used for vcl. Below we add our own.
+    set req.hash += req.url;
+    set req.hash += req.http.host;
+    ### Also add cookie
+    set req.hash += req.http.cookie;  
+
+    ### regsub replaces only the bit in your match criteria with whatever you
+    ### ask it too. In this case, we need to remove *EVERYTHING* else from the
+    ### cookie, except the UUID, hence the full string match    
+    ### This is using the UUID, which will always stay the same. If you wish
+    ### to cache based on the session, you could use "myapp_session" instead.
+    ### The regex is PCRE, so it works only in trunk. If you wish to use it
+    ### with Varnish 2.0, remove the '?' non-greedy operator and be aware it
+    ### changes the behavior of the regex.
+    if( req.http.Cookie ~ "frontend" ) {
+        set req.http.X-Varnish-Hashed-On = 
+            regsub( req.http.Cookie, "^.*?frontend=([^;]*);*.*$", "\1" );
+    }
+
+    ### if the esi request is UUID specific, add the UUID to the hashing
+    ### The only requirement on the application is now that UUID specific 
+    ### content mentions the string UUID in it.    
+    if( req.url ~ "^/varnish/esi/.*UUID" && req.http.X-Varnish-Hashed-On ) { 
+        set req.hash += req.http.X-Varnish-Hashed-On;
+    }
+    
+    return (hash);
+}
+
 sub vcl_fetch {
-    if (beresp.http.Surrogate-Control ~ "ESI/1.0") {
-        unset beresp.http.Surrogate-Control;
+    if (beresp.http.Surrogate-Control ~ "ESI/1.0") { 
+        unset beresp.http.Surrogate-Control;   
         esi;
     }
+    # strip the cookie before the image is inserted into cache.
+    if (req.url ~ "^[^?]*\.(css|js|htc|xml|txt|swf|flv|pdf|gif|jpe?g|png|ico)$") {
+        # Force caching
+		remove beresp.http.Pragma;
+		remove beresp.http.Set-Cookie;
+		set beresp.http.Cache-Control = "public";
+    }
+    
     return (deliver);
 }
 
@@ -109,12 +147,13 @@ sub vcl_deliver {
   # Set a cache header to allow us to inspect the response
   # headers during testing
   if (obj.hits > 0) {
-    set beresp.http.X-Cache = "HIT";
+    set resp.http.X-Cache = "HIT";
+    set resp.http.X-Cache-Hits = obj.hits;
   } else {
-    set beresp.http.X-Cache = "MISS";
+    set resp.http.X-Cache = "MISS";
   }
 
-  if (req.http.Cookie !~ "nocache" && resp.http.Set-Cookie !~ "nocache") {
-    unset beresp.http.Set-Cookie;
-  }
+  # if (req.http.Cookie !~ "nocache" && resp.http.Set-Cookie !~ "nocache") {
+  #   unset resp.http.Set-Cookie;
+  # }
 }
