@@ -1,6 +1,6 @@
 include_recipe "varnish"
 
-template "#{node[:varnish][:dir]}default.vcl" do
+template "#{node[:varnish][:dir]}/default.vcl" do
   source "varnish.vcl.erb"
   owner "root"
   group "root"

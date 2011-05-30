@@ -27,7 +27,6 @@ mysql_database "create #{node[:magento][:db][:database]} database" do
   action [:create_db]
 end
 
-
 grants_path = value_for_platform(
   ["centos", "redhat", "suse", "fedora" ] => {
     "default" => "/etc/mage-grants.sql"
@@ -45,6 +44,6 @@ template "/etc/mysql/mage-grants.sql" do
 end
 
 execute "mysql-install-mage-privileges" do
-  command "/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} < #{grants_path}"
-  action :run
+    command "/usr/bin/mysql -u root #{node['mysql']['server_root_password'].empty? ? '' : '-p' }#{node['mysql']['server_root_password']} < #{grants_path}"
+    action :run
 end
