@@ -149,12 +149,6 @@ template "apache2.conf" do
   notifies :restart, resources(:service => "apache2")
 end
 
-if platform?(%w{redhat centos fedora})
-    execute "Fix-SElinux-security" do
-       command "chcon -t httpd_config_t #{node[:apache][:dir]}/conf/httpd.conf" 
-    end
-end
-
 template "security" do
   path "#{node[:apache][:dir]}/conf.d/security"
   source "security.erb"
