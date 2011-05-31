@@ -5,6 +5,7 @@ run_list(
 	"tomcat",
 	"jenkins",
 	"jenkins::tomcat",
+	"jenkins::apache-tomcat",
 	"jenkins::php-jenkins-template"
   )
 # Attributes applied if the node doesn't have it set already.

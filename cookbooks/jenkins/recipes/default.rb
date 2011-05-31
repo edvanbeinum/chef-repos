@@ -45,13 +45,6 @@ package "jenkins" do
   action :upgrade
 end
 
-# bash "start_jenkins" do
-# user "root"
-#   cwd "/tmp"
-#   code <<-EOH
-#     sudo /etc/init.d/jenkins start
-#   EOH
-# end
 
 ruby_block "wait_for_server_to_start" do
   block do
