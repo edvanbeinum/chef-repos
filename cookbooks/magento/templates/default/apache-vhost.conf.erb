@@ -17,7 +17,14 @@
   </Directory>
   
   <Directory <%= node[:magento][:apache][:docroot] %>/<%= node[:magento][:apache][:servername] %><%= node[:magento][:apache][:path] %>>
-    Options FollowSymLinks                    
+    Options FollowSymLinks    
+    
+    <% if node[:apache][:basic_username] %>
+        AuthUserFile <%= node[:magento][:apache][:docroot] %>/<%= node[:magento][:apache][:servername] %><%= node[:magento][:apache][:path] %>/.htpasswd
+        AuthType Basic
+        AuthName "Protected System"
+        Require valid-user
+    <% end  %>               
     
     ## Apache optimisation by disabling the .htaccess parsing
     ## Directives for securing directorys have been added to this file
