@@ -7,7 +7,7 @@ run_list(
   "php::codebrowser",
   "php::codesniffer",
   "php::copypaste",
-  "php::depend",
+  # "php::depend",
   "php::documentor",
   "php::phpmd",
   "php::phpunit",
