@@ -17,28 +17,27 @@
 # limitations under the License.
 #
 
-include_recipe "magento-base::mysql"
+include_recipe "magento::mysql"
 
 unless File.exists?("#{node[:magento][:dir]}/app/etc/local.xml")
 
-  remote_file "#{Chef::Config[:file_cache_path]}/magento-sample-data.tar.gz" do                       
+  remote_file "/tmp/magento-sample-data.tar.gz" do                       
     source node[:magento][:sample_data][:url]                                  
-    mode "0644"                                                                
+    mode "0644"
+    action :create_if_missing                                                           
   end
   
   bash "magento-sample-data" do                                                
-    cwd "#{Chef::Config[:file_cache_path]}"
+    cwd "/tmp"
     code <<-EOH
 mkdir #{name}
 cd #{name}
-tar -zxvf  #{Chef::Config[:file_cache_path]}/magento-sample-data.tar.gz
+tar -zxvf  /tmp/magento-sample-data.tar.gz
 mv magento-sample-data-* data
 mv data/media/* #{node[:magento][:dir]}/media/
 chmod -R o+w  #{node[:magento][:dir]}/media
 mv data/magento_sample_data*.sql data.sql 2>/dev/null
-/usr/bin/mysql -u #{node[:magento][:db][:username]} -p#{node[:magento][:db][:password]} #{node[:magento][:db][:database]} -v < data.sql
-cd ..
-rm -rf #{name}
+/usr/bin/mysql -u root -p#{node[:mysql][:server_root_password]} #{node[:magento][:db][:database]} -v < data.sql
 EOH
   end
 end

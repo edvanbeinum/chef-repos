@@ -32,7 +32,7 @@ php -f install.php -- \
 --db_name "#{node[:magento][:db][:database]}" \
 --db_user "#{node[:magento][:db][:username]}" \
 --db_pass "#{node[:magento][:db][:password]}" \
---url "http://#{node[:apache][:servername]}/" \
+--url "http://#{node[:magento][:apache][:servername]}/" \
 --skip_url_validation \
 --session_save "#{node[:magento][:app][:session_save]}" \
 --admin_frontname "#{node[:magento][:app][:admin_frontname]}" \

@@ -10,7 +10,7 @@ pkgs = value_for_platform(
     "default" => packages
   },
   [ "debian", "ubuntu" ] => {
-    "default" => %w{ php5-xml }
+    "default" => %w{ }
   }
 )
 

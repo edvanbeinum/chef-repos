@@ -18,3 +18,7 @@
 #
 
 apache_module "auth_basic"
+
+cookbook_file value_for_platform([ "centos", "redhat", "fedora", "suse" ] => { "default" => "/etc/httpd/htpasswd"}, "default" => "/etc/apache2/htpasswd") do
+  mode "0644"
+end

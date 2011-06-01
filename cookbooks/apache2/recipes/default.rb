@@ -149,12 +149,6 @@ template "apache2.conf" do
   notifies :restart, resources(:service => "apache2")
 end
 
-if platform?(%w{redhat centos fedora})
-    execute "Fix-SElinux-security" do
-       command "chcon -t httpd_config_t #{node[:apache][:dir]}/conf/httpd.conf" 
-    end
-end
-
 template "security" do
   path "#{node[:apache][:dir]}/conf.d/security"
   source "security.erb"
@@ -201,10 +195,15 @@ include_recipe "apache2::mod_authz_groupfile"
 include_recipe "apache2::mod_authz_host"
 include_recipe "apache2::mod_authz_user"
 include_recipe "apache2::mod_autoindex"
+# include_recipe "apache2::mod_deflate"
+include_recipe "apache2::mod_expires"
+include_recipe "apache2::mod_headers"
 include_recipe "apache2::mod_dir"
 include_recipe "apache2::mod_env"
 include_recipe "apache2::mod_mime"
 include_recipe "apache2::mod_negotiation"
+include_recipe "apache2::mod_rewrite"
+include_recipe "apache2::mod_ssl"
 include_recipe "apache2::mod_setenvif"
 include_recipe "apache2::mod_log_config" if platform?("centos", "redhat", "fedora", "suse", "arch")
 
