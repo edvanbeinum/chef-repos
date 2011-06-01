@@ -1,0 +1,20 @@
+    <VirtualHost *:<%= node[:apache][:listen_ports][0] %>>
+      ServerName <%= node[:jenkins][:apache][:servername] %>
+      ServerAlias <% node[:jenkins][:apache][:server_alias].each do |a| %><%= "#{a}" %> <% end %>
+      DocumentRoot <%= node[:jenkins][:apache][:docroot] %>
+
+      <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+      </Directory>
+
+      <Directory /var/lib/<%= node[:jenkins][:tomcat][:version] %> >
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride None
+        Order allow,deny
+        allow from all
+      </Directory>
+
+     JkMount /* <%= node[:jenkins][:tomcat][:version] %>
+
+    </VirtualHost>
