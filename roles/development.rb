@@ -4,7 +4,7 @@ description "PHP Development system"
 run_list(
   "php",
   "php::pear",
-  "php::codebrowser",
+  # "php::codebrowser",
   "php::codesniffer",
   "php::copypaste",
   # "php::depend",
