@@ -6,21 +6,26 @@
 #
 # All rights reserved - Do Not Redistribute
 
+path = value_for_platform(
+  ["centos", "redhat", "fedora"] => {"default" => "/usr/lib/jenkins"},
+  "default" => "/usr/share/jenkins"
+)
+
 
 bash "run_jenkins_on_tomcat" do
   user "root"
   cwd "/tmp"
-  code <<-END 
+  code <<-END
     rm -fr /var/lib/tomcat6/webapps/ROOT*
-  	cp /usr/share/jenkins/jenkins.war /var/lib/tomcat6/webapps/ROOT.war
-  	chown tomcat6:tomcat6 /var/lib/tomcat6/webapps/ROOT.war
-  	chmod a+x /var/lib/tomcat6/webapps/ROOT.war
+    cp #{path}/jenkins.war /var/lib/tomcat6/webapps/ROOT.war
+    chown tomcat6:tomcat6 /var/lib/tomcat6/webapps/ROOT.war
+    chmod a+x /var/lib/tomcat6/webapps/ROOT.war
 END
 end
 
 if platform?(%w{debian ubuntu})
-  execute "fix_debian_security" do      
-    command "echo 'CATALINA_OPTS=\"-DJENKINS_HOME=/var/lib/tomcat6/webapps/jenkins/\"' >> /etc/default/tomcat6"  
+  execute "fix_debian_security" do
+    command "echo 'CATALINA_OPTS=\"-DJENKINS_HOME=/var/lib/tomcat6/webapps/jenkins/\"' >> /etc/default/tomcat6"
     action :run
   end
 end

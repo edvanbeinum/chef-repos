@@ -13,32 +13,32 @@
 
 
 packages = value_for_platform(
-  ["centos", "redhat", "fedora", "suse"] => {"default" => %w(ant daemon)},
-  "default" => %w{ant daemon}
+  ["centos", "redhat", "fedora", "suse"] => {"default" => %w(ant)},
+  "default" => %w{ant}
 )
 
 packages.each do |pkg|
   package pkg do
-    action :upgrade
+    action :install
   end
 end
 
-bash "install_jenkins" do
+bash "install_jenkins_rpm" do
 user "root"
   cwd "/tmp"
   if platform?(%w{debian ubuntu})
-	code <<-EOH
-	    wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
-	    sudo echo "deb http://pkg.jenkins-ci.org/debian binary/" > /etc/apt/sources.list.d/jenkins.list
-	    apt-get update	    
-	  EOH
-  elsif plaform?(%w{centos redhat fedora})
-	code <<-EOH 
-		wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
-		rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key		
-	EOH
-end
-  
+      code <<-EOH
+      wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+      sudo echo "deb http://pkg.jenkins-ci.org/debian binary/" > /etc/apt/sources.list.d/jenkins.list
+      apt-get update
+      EOH
+  elsif platform?(%w{centos redhat fedora})
+      code <<-EOH
+      wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+      rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+      EOH
+  end
+
 end
 
 package "jenkins" do
@@ -48,7 +48,7 @@ end
 
 ruby_block "wait_for_server_to_start" do
   block do
-    sleep 20
+    sleep 30
   end
   action :create
 end

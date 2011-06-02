@@ -7,6 +7,17 @@
         Options FollowSymLinks
         AllowOverride None
       </Directory>
+      
+      <Directory <%= node[:jenkins][:apache][:docroot] %>>
+          Options FollowSymLinks    
+
+          <% if node[:apache][:basic_username] %>
+              AuthUserFile <%= node[:jenkins][:apache][:docroot] %>/.htpasswd
+              AuthType Basic
+              AuthName "Protected System"
+              Require valid-user
+          <% end  %>
+      </Directory>
 
       <Directory /var/lib/<%= node[:jenkins][:tomcat][:version] %> >
         Options Indexes FollowSymLinks MultiViews
