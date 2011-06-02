@@ -22,9 +22,9 @@ include_recipe "java"
 case node[:platform]
 when "redhat","centos","fedora"
   
-  package "yum-priorities" do
-    action :install
-  end
+  # package "yum-priorities" do
+  #   action :install
+  # end
   
   execute "yum clean all" do
     action :nothing
