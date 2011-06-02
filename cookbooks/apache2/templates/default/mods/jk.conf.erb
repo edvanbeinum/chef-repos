@@ -1,5 +1,5 @@
-    JkWorkersFile      /etc/apache2/workers.properties
-    JkLogFile          "/var/log/apache2/mod_jk.lo"
+    JkWorkersFile      <%= node[:apache][:dir] %>/workers.properties
+    JkLogFile          "<%= node[:apache][:dir] %>/mod_jk.lo"
     JkLogLevel         info
     JkLogStampFormat   "[%a %b %d %H:%M:%S %Y] "
     JkRequestLogFormat "%w %V %T"

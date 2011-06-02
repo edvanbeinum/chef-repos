@@ -19,49 +19,54 @@
 # http://blog.mansonthomas.com/2009/06/setup-tomcat6-with-native-library-with.html
 # 
 if platform?(%w{"centos"})
-  bash "install_mod_jk" do
+  bash "install_centos_mod_jk" do
   user "root"
   cwd "/tmp"
   code <<-EOH
       wget http://dev.centos.org/centos/5/testing/i386/RPMS/mod_jk-ap20-1.2.28-2.el5.centos.i386.rpm
-      rpm -ivh  mod_jk-ap20-1.2.28-2.el5.centos.i386.rpm
+      rpm -ivh  mod_jk-ap20-1.2.28-2.el5.centos.i386.rpm | cat
 EOH
   end
 elsif platform?("redhat")
-  bash "install_mod_jk" do
+  bash "install_redhat_mod_jk" do
   user "root"
   cwd "/tmp"
   code <<-EOH
-      get http://mirrors.dotsrc.org/jpackage/1.7/redhat-el-5.0/free/RPMS/mod_jk-ap20-1.2.26-1jpp.i386.rpm
-      rpm -ivh mod_jk-ap20-1.2.26-1jpp.i386.rpm
+      wget http://mirrors.dotsrc.org/jpackage/1.7/redhat-el-5.0/free/RPMS/mod_jk-ap20-1.2.26-1jpp.i386.rpm
+      rpm -ivh mod_jk-ap20-1.2.26-1jpp.i386.rpm | cat
 EOH
   end
 end
 
-package "libapache2-mod-jk" do
-  case node[:platform]
-    when "centos"
-      package_name "mod_jk-ap20-1.2.28-2.el5.centos.i386.rpm"
-    when "redhat"
-      package_name "mod_jk-ap20-1.2.26-1jpp.i386.rpm"
-    when "debian","ubuntu"
-      package_name "libapache2-mod-jk"
+pkgs = value_for_platform(
+  ["centos", "redhat", "fedora"] => {"default" => %w{"mod_jk-ap20"}},
+  ["ubuntu", "debian"] => {"default" => %w{"libapache2-mod-jk"}},
+  "default" => %w{"libapache2-mod-jk"}
+)
+
+pkgs.each do |pkg|
+  package pkg do
+    action :upgrade
   end
-  action :install
 end
 
 # configure mod_jk, add jk.conf
-template "/etc/apache2/mods-enabled/jk.conf" do
+template "#{node[:apache][:dir]}/mods-available/jk.conf" do
   source "mods/jk.conf.erb"
+  mode 0644
   owner "root"
   group "root"
 end
 
 # add /etc/apache2/worker.properties
-template "/etc/apache2/workers.properties" do
+template "#{node[:apache][:dir]}/workers.properties" do
   source "mods/jk-worker.properties.erb"
   owner "root"
   group "root"
+end
+
+apache_module "jk" do
+  conf true
 end
 
 service "apache2" do
