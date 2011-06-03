@@ -18,22 +18,15 @@
 
 # http://blog.mansonthomas.com/2009/06/setup-tomcat6-with-native-library-with.html
 # 
-if platform?(%w{"centos"})
-  bash "install_centos_mod_jk" do
-  user "root"
-  cwd "/tmp"
-  code <<-EOH
-      wget http://dev.centos.org/centos/5/testing/i386/RPMS/mod_jk-ap20-1.2.28-2.el5.centos.i386.rpm
-      rpm -ivh  mod_jk-ap20-1.2.28-2.el5.centos.i386.rpm | cat
-EOH
-  end
-elsif platform?("redhat")
+if platform?(%w{"centos", "redhat"})
   bash "install_redhat_mod_jk" do
   user "root"
   cwd "/tmp"
   code <<-EOH
-      wget http://mirrors.dotsrc.org/jpackage/1.7/redhat-el-5.0/free/RPMS/mod_jk-ap20-1.2.26-1jpp.i386.rpm
-      rpm -ivh mod_jk-ap20-1.2.26-1jpp.i386.rpm | cat
+      wget http://apache.favoritelinks.net//tomcat/tomcat-connectors/jk/binaries/linux/jk-1.2.31/x86_64/mod_jk-1.2.31-httpd-2.2.x.so
+      cp mod_jk-1.2.31-httpd-2.2.x.so /usr/lib64/httpd/modules/mod_jk.so
+      chmod a+x /usr/lib64/httpd/modules/mod_jk.so
+      echo 'LoadModule jk_module /usr/lib64/httpd/modules/mod_jk.so' >> /etc/httpd/mods_available/jk.load
 EOH
   end
 end
