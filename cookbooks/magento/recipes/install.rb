@@ -18,11 +18,8 @@
 #
 
 unless File.exists?("#{node[:magento][:dir]}/app/etc/local.xml")
-
-  bash "magento-install-site" do
-    cwd "#{node[:magento][:dir]}/"
-    code <<-EOH
-cd #{node[:magento][:dir]}/ && \
+    
+  install =   <<-EOH
 php -f install.php -- \
 --license_agreement_accepted "yes" \
 --locale "#{node[:magento][:app][:locale]}" \
@@ -44,7 +41,17 @@ php -f install.php -- \
 --admin_lastname "#{node[:magento][:admin][:lastname]}" \
 --admin_email "#{node[:magento][:admin][:email]}" \
 --admin_username "#{node[:magento][:admin][:user]}" \
---admin_password "#{node[:magento][:admin][:password]} | cat"
+--admin_password "#{node[:magento][:admin][:password]}"
+EOH
+
+  
+  log(install) { level :info }
+
+  bash "magento-install-site" do
+    cwd "#{node[:magento][:dir]}/"
+    code <<-EOH
+cd #{node[:magento][:dir]}/ && \
+#{install}
 EOH
   end
 end

@@ -26,10 +26,11 @@ default[:magento][:db][:database] = "magentodb"
 default[:magento][:db][:username] = "magentouser"
 
 
-default[:magento][:admin][:firstname] = "Admin"
+default[:magento][:admin][:firstname] = "Chef"
 default[:magento][:admin][:lastname] = "Admin"
-default[:magento][:admin][:email] = "support@magento.com"
-default[:magento][:admin][:user] = "devadmin"
+default[:magento][:admin][:email] = "chef@magento.com"
+default[:magento][:admin][:user] = "chef"
+default[:magento][:admin][:password] = '123123'
 
 default[:magento][:sample_data][:url] = "http://www.magentocommerce.com/downloads/assets/1.2.0/magento-sample-data-1.2.0.tar.gz"
 
@@ -39,4 +40,3 @@ default[:magento][:server][:static_domains] = Array.new
 ::Chef::Node.send(:include, Opscode::OpenSSL::Password)
 
 default_unless[:magento][:db][:password] = secure_password
-default[:magento][:admin][:password] = 'pa33word'
