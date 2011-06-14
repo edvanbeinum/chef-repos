@@ -1,3 +1,4 @@
+include_recipe "jenkins"
 include_recipe "php::depend"
 include_recipe "php::phpmd"
 include_recipe "php::copypaste"
@@ -7,18 +8,10 @@ include_recipe "php::codesniffer"
 include_recipe "php::codebrowser"
 include_recipe "php::phpunit"
 
-cookbook_file "/tmp/jenkins-cli.jar" do
-  source "jenkins-cli.jar"
-  mode 0755
-  action :create
-end
-
-ruby_block "wait_for_server_to_be_available" do
-  block do
-    sleep 30
-  end
-  action :create
-end
+path = value_for_platform(
+  ["centos", "redhat", "fedora"] => {"default" => "/usr/lib/jenkins"},
+  "default" => "/usr/lib/jenkins"
+)
 
 modules = [
   "git",
@@ -36,33 +29,29 @@ modules = [
   "ci-game"
 ]
 
+ruby_block "wait_for_server_to_be_available" do
+   block do
+     sleep 30
+   end
+   action :create
+end
+
 modules.each do
   |mod|
+  cli_command = "java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin http://updates.jenkins-ci.org/latest/#{mod}.hpi"
+  log(cli_command) { level :info }
   bash "install_#{mod}" do
-    user "root"
-    cwd "/tmp"
-    code "java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin http://updates.jenkins-ci.org/latest/#{mod}.hpi"
+    user "jenkins"
+    cwd "/var/lib/jenkins"
+    code cli_command
+    notifies :reload, resources("service[jenkins]"), :delayed
   end
 end
 
-cookbook_file "/var/lib/tomcat6/webapps/jenkins/jobs/php-template/config.xml" do
-  source "config.xml"
-  mode "0644"
-end
-
-# bash "get_php-jenkins-template" do
-#   user "root"
-#   cwd "/tmp"
-#   code <<-END
-#   wget --no-check-certificate https://github.com/sebastianbergmann/php-jenkins-template/tarball/master -O - | tar zx 
-#   mv sebastianbergmann-php-jenkins-template-* /var/lib/tomcat6/webapps/jenkins/jobs/php-template
-#   rm -r sebastianbergmann-php-jenkins-template-*
-#   chown -R tomcat6:tomcat6 /var/lib/tomcat6/webapps/jenkins/jobs/php-template
-# END
-# end
-
-bash "reload_jenkins" do
-  user "root"
-  cwd "/tmp"
-  code "java -jar jenkins-cli.jar -s http://localhost:8080/ reload-configuration"
+git "/var/lib/jenkins/jobs/php-template" do
+  repository "git://github.com/sebastianbergmann/php-jenkins-template.git"
+  reference "master"
+  user "jenkins"
+  group "jenkins"
+  action :sync
 end

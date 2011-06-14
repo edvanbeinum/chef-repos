@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-#     wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+# wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 # sudo echo "deb http://pkg.jenkins-ci.org/debian binary/" > /etc/apt/sources.list.d/jenkins.list
 # sudo aptitude update
 # sudo aptitude install jenkins
@@ -45,10 +45,18 @@ package "jenkins" do
   action :upgrade
 end
 
-
-ruby_block "wait_for_server_to_start" do
-  block do
-    sleep 30
-  end
-  action :create
+service "jenkins" do
+  service_name "jenkins"
+  supports value_for_platform(
+    "debian" => { "4.0" => [ :restart, :reload ], "default" => [ :restart, :reload, :status ] },
+    "ubuntu" => { "default" => [ :restart, :reload, :status ] },
+    "centos" => { "default" => [ :restart, :reload, :status ] },
+    "redhat" => { "default" => [ :restart, :reload, :status ] },
+    "fedora" => { "default" => [ :restart, :reload, :status ] },
+    "arch" => { "default" => [ :restart, :reload, :status ] },
+    "default" => { "default" => [:restart, :reload ] }
+  )
+  action :enable
 end
+
+include_recipe "jenkins::cli"
