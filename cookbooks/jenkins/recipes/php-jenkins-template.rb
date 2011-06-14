@@ -14,11 +14,13 @@ path = value_for_platform(
 )
 
 modules = [
+  "template-project",
   "git",
   "github",
   "greenballs",
   "checkstyle",
   "clover",
+  "cloverphp",
   "dry",
   "htmlpublisher",
   "jdepend",
@@ -26,7 +28,8 @@ modules = [
   "pmd",
   "violations",
   "xunit",
-  "ci-game"
+  "ci-game",
+  "chucknorris"
 ]
 
 ruby_block "wait_for_server_to_be_available" do
@@ -38,7 +41,7 @@ end
 
 modules.each do
   |mod|
-  cli_command = "java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin http://updates.jenkins-ci.org/latest/#{mod}.hpi"
+  cli_command = "java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin #{mod}"
   log(cli_command) { level :info }
   bash "install_#{mod}" do
     user "jenkins"
@@ -54,4 +57,11 @@ git "/var/lib/jenkins/jobs/php-template" do
   user "jenkins"
   group "jenkins"
   action :sync
+end
+
+
+bash "restart_jenkins" do
+  user "root"
+  cwd "/tmp"
+  code "java -jar jenkins-cli.jar -s http://localhost:8080/ restart"
 end
