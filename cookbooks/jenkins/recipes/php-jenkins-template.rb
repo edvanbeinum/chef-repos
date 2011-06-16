@@ -1,4 +1,5 @@
 include_recipe "jenkins"
+include_recipe "php::xdebug"
 include_recipe "php::depend"
 include_recipe "php::phpmd"
 include_recipe "php::copypaste"
