@@ -1,6 +1,5 @@
-
+include_recipe "php"
 include_recipe "php::zendframework"
-
 include_recipe "php::pear"
 
 mt = php_pear_channel "pear.magetool.co.uk" do
@@ -17,8 +16,16 @@ end
 # hardcoded to the "user" user.  Is there any easy way to "push" onto
 # the basicloader.classes array?
 
-file "/home/vagrant/.zf.ini" do
-  owner "vagrant"
+filePath = "/home/user/.zf.ini"
+user = "user"
+
+if File.exists?("/home/vagrant/")
+    filePath = "/home/vagrant/.zf.ini" 
+    user = "vagrant" 
+end
+
+file filePath do
+  owner user
   mode "0644"
   content [
     "php.include_path = \".:/usr/share/php:/usr/share/pear\"",

@@ -25,22 +25,16 @@ end
 
 package "mysql-devel" do
   package_name value_for_platform(
-    [ "centos", "redhat", "suse", "fedora"] => { "default" => develname },
+    [ "centos", "redhat", "suse", "fedora"] => { "default" => "mysql-devel" },
     ["debian", "ubuntu"] => { "default" => 'libmysqlclient-dev' },
     "default" => 'libmysqlclient-dev'
   )
   action :install
 end
 
-clientname = "mysql"
-
-if File.exists?("/etc/yum.repos.d/ius.repo")
-    clientname = "mysqlclient15"  
-end
-
 package "mysql-client" do
   package_name value_for_platform(
-    [ "centos", "redhat", "suse", "fedora"] => { "default" => clientname },
+    [ "centos", "redhat", "suse", "fedora"] => { "default" => "mysql-client" },
     "default" => "mysql-client"
   )
   action :install

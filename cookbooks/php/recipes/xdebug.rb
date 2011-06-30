@@ -7,10 +7,7 @@ include_recipe "php::module_dev"
 # end
 
 if platform?(%w{debian ubuntu})
-    execute "install_xdebug" do
-      command "pecl install xdebug"
-      not_if "pecl list | grep xdebug"
-    end
+    package "php5-xdebug"
 
     template "#{node['php']['ext_conf_dir']}/xdebug.ini" do
       mode "0644"
