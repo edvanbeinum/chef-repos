@@ -60,7 +60,7 @@ end
 packagename = "mysql-server"
 
 if File.exists?("/etc/yum.repos.d/ius.repo")
-    packagename = "mysql55-server" 
+    packagename = "mysql-server" 
 end
 
 package packagename do

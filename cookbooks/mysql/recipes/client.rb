@@ -34,7 +34,7 @@ end
 
 package "mysql-client" do
   package_name value_for_platform(
-    [ "centos", "redhat", "suse", "fedora"] => { "default" => "mysql-client" },
+    [ "centos", "redhat", "suse", "fedora"] => { "default" => "mysql" },
     "default" => "mysql-client"
   )
   action :install
