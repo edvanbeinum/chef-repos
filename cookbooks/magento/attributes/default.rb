@@ -30,7 +30,7 @@ default[:magento][:admin][:firstname] = "Chef"
 default[:magento][:admin][:lastname] = "Admin"
 default[:magento][:admin][:email] = "chef@magento.com"
 default[:magento][:admin][:user] = "chef"
-default[:magento][:admin][:password] = '123123'
+default[:magento][:admin][:password] = '123123pass'
 
 default[:magento][:sample_data][:url] = "http://www.magentocommerce.com/downloads/assets/1.2.0/magento-sample-data-1.2.0.tar.gz"
 
