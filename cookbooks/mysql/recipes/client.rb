@@ -17,12 +17,6 @@
 # limitations under the License.
 #
 
-develname = "mysql-devel"
-
-if File.exists?("/etc/yum.repos.d/ius.repo")
-    develname = "mysqlclient15-devel"  
-end
-
 package "mysql-devel" do
   package_name value_for_platform(
     [ "centos", "redhat", "suse", "fedora"] => { "default" => "mysql-devel" },
@@ -35,7 +29,7 @@ end
 package "mysql-client" do
   package_name value_for_platform(
     [ "centos", "redhat", "suse", "fedora"] => { "default" => "mysql" },
-    "default" => "mysql-client"
+    "default" => "mysql"
   )
   action :install
 end

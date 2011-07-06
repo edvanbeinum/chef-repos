@@ -57,13 +57,7 @@ if platform?(%w{debian ubuntu})
 
 end
 
-packagename = "mysql-server"
-
-if File.exists?("/etc/yum.repos.d/ius.repo")
-    packagename = "mysql-server" 
-end
-
-package packagename do
+package "mysql-server" do
   action :install
 end
 
