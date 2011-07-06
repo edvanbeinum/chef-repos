@@ -7,6 +7,7 @@ include_recipe "php::phploc"
 include_recipe "php::documentor"
 include_recipe "php::codesniffer"
 include_recipe "php::codebrowser"
+include_recipe "php::vfsStream"
 include_recipe "php::phpunit"
 
 path = value_for_platform(
