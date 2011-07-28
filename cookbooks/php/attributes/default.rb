@@ -22,6 +22,11 @@ lib_dir = kernel['machine'] =~ /x86_64/ ? 'lib64' : 'lib'
 
 default['php']['install_method'] = 'package'
 
+# php.ini variables
+default['php']['display_errors'] = 'Off'
+default['php']['error_reporting'] = 'E_ALL'
+default['php']['date.timezone'] = 'Europe/London'
+
 case node["platform"]
 when "centos", "redhat", "fedora"
   default['php']['conf_dir']      = '/etc'
