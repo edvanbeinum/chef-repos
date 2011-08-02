@@ -29,7 +29,6 @@ file filePath do
   mode "0644"
   content [
     "php.include_path = \".:/usr/share/php:/usr/share/pear\"",
-    "basicloader.classes.0 = \"MageTool_Tool_MageApp_Provider_Manifest\"",
-    "basicloader.classes.1 = \"MageTool_Tool_MageExtension_Provider_Manifest\""
+    "basicloader.classes.0 = \"MageTool_Tool_Manifest\""
   ].join("\n")
 end
