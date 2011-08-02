@@ -601,7 +601,7 @@ track_errors = Off
 ; Development Value: On
 ; Production value: Off
 ; http://php.net/html-errors
-html_errors = Off
+html_errors = <%= node['php']['html_errors'] %>
 
 ; If html_errors is set On PHP produces clickable error messages that direct
 ; to a page describing the error or function causing the error in detail.
@@ -989,7 +989,7 @@ default_socket_timeout = 60
 [Date]
 ; Defines the default timezone used by the date functions
 ; http://php.net/date.timezone
-date.timezone = <%= node[:php][:date.timezone] %>
+date.timezone = <%= node[:php][:date_timezone] %>
 
 ; http://php.net/date.default-latitude
 ;date.default_latitude = 31.7667

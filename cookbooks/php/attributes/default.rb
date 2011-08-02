@@ -24,8 +24,9 @@ default['php']['install_method'] = 'package'
 
 # php.ini variables
 default['php']['display_errors'] = 'Off'
+default['php']['html_errors'] = 'Off'
 default['php']['error_reporting'] = 'E_ALL'
-default['php']['date.timezone'] = 'Europe/London'
+default['php']['date_timezone'] = 'Europe/London'
 
 case node["platform"]
 when "centos", "redhat", "fedora"
