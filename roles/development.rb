@@ -2,15 +2,17 @@ name "development"
 description "PHP Development system"
 # List of recipes and roles to apply. Requires Chef 0.8, earlier versions use 'recipes()'.
 run_list(
+  "ant",
   "php",
   "php::pear",
-  # "php::codebrowser",
+  "php::codebrowser",
   "php::codesniffer",
   "php::copypaste",
-  # "php::depend",
+  "php::depend",
   "php::documentor",
   "php::phpmd",
   "php::phpunit",
+  "php::vfsStream",
   "php::xdebug",
   "magento::magetool"
   )
