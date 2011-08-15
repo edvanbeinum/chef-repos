@@ -21,7 +21,7 @@ default[:magento][:apache][:server_alias] = Array.new
 default[:magento][:apache][:docroot] = "/var/www"
 default[:magento][:apache][:path] = "/public"
 
-default[:magento][:db][:host] = "localhost"
+default[:magento][:db][:host] = "127.0.0.1"
 default[:magento][:db][:database] = "magentodb"
 default[:magento][:db][:username] = "magentouser"
 
