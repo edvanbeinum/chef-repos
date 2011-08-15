@@ -3,6 +3,9 @@ description "PHP Development system"
 # List of recipes and roles to apply. Requires Chef 0.8, earlier versions use 'recipes()'.
 run_list(
   "ant",
+  "base::ack",
+  "base::mc",
+  "base::vim",
   "php",
   "php::pear",
   "php::codebrowser",
