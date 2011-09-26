@@ -45,4 +45,9 @@ else
     end
 end
 
-
+template "#{node['php']['ext_conf_dir']}/apc.ini" do
+  source "apc.ini.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+end
