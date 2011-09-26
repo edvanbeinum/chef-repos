@@ -37,6 +37,15 @@ if attribute?('ec2')
   default['mysql']['ebs_vol_size'] = 50
 end
 
+default['mysql']['server_id'] = "1"
+default['mysql']['log_bin'] = "mysql-bin"
+# Master server config
+default['mysql']['master'] = false
+# Slave config
+default['mysql']['slave'] = false
+default['mysql']['relay_log'] = "mysql-relay-bin"
+default['mysql']['read_only'] = "1"
+
 default['mysql']['tunable']['back_log']             = "128"
 default['mysql']['tunable']['key_buffer']           = "256M"
 default['mysql']['tunable']['max_allowed_packet']   = "16M"

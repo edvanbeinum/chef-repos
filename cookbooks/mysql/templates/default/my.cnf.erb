@@ -100,6 +100,18 @@ log-queries-not-using-indexes
 #       other settings you may need to change.
 #server-id              = 1
 #log_bin                        = /var/log/mysql/mysql-bin.log
+<% if node['mysql']['master'] %>
+server_id = <%= node['mysql']['server_id'] %>
+log_bin = <%= node['mysql']['log_bin'] %>
+<% end %>
+<% if node['mysql']['slave'] %>
+server_id = <%= node['mysql']['server_id'] %>
+log_bin = <%= node['mysql']['log_bin'] %>
+relay_log = <%= node['mysql']['relay_log'] %>
+read_only = <%= node['mysql']['read_only'] %>
+<% end %>
+
+
 expire_logs_days        = 10
 max_binlog_size         = 100M
 #binlog_do_db           = include_database_name
