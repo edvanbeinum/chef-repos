@@ -15,6 +15,7 @@ pu = php_pear_channel "pear.phpunit.de" do
 end
 
 php_pear "phpcpd" do
-  channel pu.channel_name
-  action :install
+    version "1.3.2"
+    channel pu.channel_name
+    action :install
 end

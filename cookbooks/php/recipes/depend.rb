@@ -6,8 +6,6 @@ pd = php_pear_channel "pear.pdepend.org" do
   action :discover
 end
 
-php_pear "PHP_Depend" do
-  # preferred_state "beta"
-  channel pd.channel_name
-  action :install
+execute "install-PHP_Depend" do
+  command "pear -d preferred_state=stable install -a pear.pdepend.org/PHP_Depend | cat"
 end

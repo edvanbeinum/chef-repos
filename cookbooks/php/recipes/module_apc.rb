@@ -19,19 +19,30 @@
 # limitations under the License.
 #
 
-case node['platform']
-when "centos", "redhat", "fedora"
-  %w{ httpd-devel pcre pcre-devel }.each do |pkg|
-    package pkg do
-      action :install
+if File.exists?("/etc/yum.repos.d/ius.repo")
+    pkgs = %w{ php53u-pecl-apc }  
+    pkgs.each do |pkg|
+      package pkg do
+        action :install
+      end
     end
-  end
-  php_pear "apc" do
-    action :install
-    directives(:shm_size => "128M", :enable_cli => 0)
-  end
-when "debian", "ubuntu"
-  package "php-apc" do
-    action :install
-  end
+else
+    case node['platform']
+    when "centos", "redhat", "fedora"
+      %w{ httpd-devel pcre pcre-devel }.each do |pkg|
+        package pkg do
+          action :install
+        end
+      end
+      php_pear "apc" do
+        action :install
+        directives(:shm_size => "128M", :enable_cli => 0)
+      end
+    when "debian", "ubuntu"
+      package "php-apc" do
+        action :install
+      end
+    end
 end
+
+

@@ -19,8 +19,18 @@ pu = php_pear_channel "pear.phpunit.de" do
   action :discover
 end
 
-php_pear "PHPUnit" do
-  preferred_state "beta"
-  channel pu.channel_name
-  action :install
+# php_pear "PHPUnit" do
+#     version "3.5.14"
+#     preferred_state "stable"
+#     channel pu.channel_name
+#     action :install
+# end
+
+phpunitCmd = <<CMD
+pear install --force --nodeps phpunit/DbUnit-1.0.2 phpunit/File_Iterator-1.2.6 phpunit/PHPUnit_MockObject-1.0.9 phpunit/PHP_CodeBrowser-1.0.0 phpunit/PHP_Timer-1.0.0 phpunit/PHP_TokenStream-1.0.1 phpunit/Text_Template-1.1.0 phpunit/phpcpd-1.3.2 phpunit/phploc-1.6.1 phpunit/PHPUnit_Selenium-1.0.3 phpunit/PHP_CodeCoverage-1.0.4 phpunit/PHPUnit-3.5.14
+CMD
+
+execute "istall-PHPUnit-manually-with-pear" do
+  command phpunitCmd
+  not_if "phpunit --version | grep PHPUnit"
 end

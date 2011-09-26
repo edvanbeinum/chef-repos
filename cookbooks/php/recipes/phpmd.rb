@@ -17,7 +17,7 @@ pu = php_pear_channel "pear.phpmd.org" do
 end
 
 php_pear "PHP_PMD" do
-  #preferred_state "alpha"
+  preferred_state "stable"
   channel pu.channel_name
   action :install
 end
