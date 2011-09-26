@@ -35,7 +35,7 @@ php -f install.php -- \
 --admin_frontname "#{node[:magento][:app][:admin_frontname]}" \
 --use_rewrites "#{node[:magento][:app][:use_rewrites]}" \
 --use_secure "#{node[:magento][:app][:use_secure]}" \
---secure_base_url "" \
+--secure_base_url "https://#{node[:magento][:apache][:servername]}/" \
 --use_secure_admin "#{node[:magento][:app][:user_secure_admin]}" \
 --admin_firstname "#{node[:magento][:admin][:firstname]}" \
 --admin_lastname "#{node[:magento][:admin][:lastname]}" \

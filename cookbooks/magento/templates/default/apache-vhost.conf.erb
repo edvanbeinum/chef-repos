@@ -1,37 +1,49 @@
-<VirtualHost *:<%= node[:apache][:listen_ports][0] %>>
+<% if @params[:ssl] %>
+<VirtualHost *:<%= node[:magento][:apache][:secure_port] %>>
+  SSLEngine on
+  SSLCertificateKeyFile ssl/<%= node[:magento][:apache][:servername] %>.key
+  SSLCertificateFile ssl/<%= node[:magento][:apache][:servername] %>.pem
+  SSLProtocol all
+  SSLCipherSuite ALL:!ADH:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+
+<% else %>
+<VirtualHost *:<%= node[:magento][:apache][:unsecure_port] %>>
+<% end %>
+
   ServerName <%= node[:magento][:apache][:servername] %>
   ServerAlias <% node[:magento][:apache][:server_alias].each do |a| %><%= "#{a}" %> <% end %>
+
   DocumentRoot <%= node[:magento][:apache][:docroot] %>/<%= node[:magento][:apache][:servername] %><%= node[:magento][:apache][:path] %>
 
   LogLevel info
   ErrorLog <%= node[:apache][:log_dir] %>/<%= node[:magento][:apache][:servername] %>-error.log
   CustomLog <%= node[:apache][:log_dir] %>/<%= node[:magento][:apache][:servername] %>-access.log combined
-  
+
   ServerSignature Off
-  
-  SetEnv MAGE_IS_DEVELOPER_MODE "true"
-  
+
+  SetEnv MAGE_IS_DEVELOPER_MODE "<%= node[:magento][:apache][:developer_mode] %>"
+
   <Directory />
     Options FollowSymLinks
     AllowOverride All
   </Directory>
-  
+
   <Directory <%= node[:magento][:apache][:docroot] %>/<%= node[:magento][:apache][:servername] %><%= node[:magento][:apache][:path] %>>
-    Options FollowSymLinks    
-    
+    Options FollowSymLinks
+
     <% if node[:apache][:basic_username] %>
         AuthUserFile <%= node[:magento][:apache][:docroot] %>/<%= node[:magento][:apache][:servername] %><%= node[:magento][:apache][:path] %>/.htpasswd
         AuthType Basic
         AuthName "Protected System"
         Require valid-user
-    <% end  %>               
-    
+    <% end  %>
+
     ## Apache optimisation by disabling the .htaccess parsing
     ## Directives for securing directorys have been added to this file
     AllowOverride None
     Order allow,deny
     Allow from all
-    
+
     ############################################
     ## uncomment these lines for CGI mode
     ## make sure to specify the correct cgi php binary file name
@@ -66,8 +78,8 @@
         ## adjust memory limit
 
         #    php_value memory_limit 64M
-        php_value memory_limit 128M
-        php_value max_execution_time 18000
+        php_value memory_limit <%= node[:magento][:apache][:memory_limit] %>
+        php_value max_execution_time <%= node[:magento][:apache][:max_execution_time] %>
 
         ############################################
         ## disable magic quotes for php request vars
@@ -115,19 +127,19 @@
         # ###SetOutputFilter DEFLATE
         # # Insert filter on selected content types only
         # AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
-        # # 
+        # #
         # # Netscape 4.x has some problems...
         # BrowserMatch ^Mozilla/4 gzip-only-text/html
-        # 
+        #
         # # Netscape 4.06-4.08 have some more problems
         # BrowserMatch ^Mozilla/4\.0[678] no-gzip
-        # 
+        #
         # # MSIE masquerades as Netscape, but it is fine
         # BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
-        # 
+        #
         # # Don't compress images
         # SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
-        # 
+        #
         # # Make sure proxies don't deliver the wrong content
         # Header append Vary User-Agent env=!dont-vary
 
@@ -149,7 +161,7 @@
 
         Options +FollowSymLinks
         RewriteEngine on
-        
+
         # RewriteLog <%= node[:apache][:log_dir] %>/<%= @application_name %>-rewrite.log
         # RewriteLogLevel 0
 
@@ -203,7 +215,7 @@
 
     #FileETag none
   </Directory>
-  
+
   <DirectoryMatch ^<%= node[:magento][:apache][:docroot] %>/<%= node[:magento][:apache][:servername] %><%= node[:magento][:apache][:path] %>/(app|downloader|error|includes|lib|media|var)$>
       Order deny,allow
       Deny from all

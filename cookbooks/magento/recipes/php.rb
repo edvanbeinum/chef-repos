@@ -19,11 +19,4 @@
 
 include_recipe "php"
 include_recipe "php::module_mcrypt"
-
-# Mostly to extend memory_limit which 32Mb on Debian
-# cookbook_file "/etc/php5/cli/php.ini" do
-#   source "cli-php.ini"
-#   mode 0644
-#   owner "root"
-#   group "root"
-# end
+include_recipe "php::module_memcache"

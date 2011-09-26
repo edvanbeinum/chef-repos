@@ -10,16 +10,21 @@ default[:magento][:app][:currency] = "GBP"
 default[:magento][:app][:session_save] = "db" # files|db|memcache
 default[:magento][:app][:admin_frontname] = "admin"
 default[:magento][:app][:use_rewrites] = "yes"
-default[:magento][:app][:use_secure] = "no"
-default[:magento][:app][:use_secure_admin] = "no"
+default[:magento][:app][:use_secure] = "yes"
+default[:magento][:app][:use_secure_admin] = "yes"
 default[:magento][:app][:multi_session_save] = "db" # files|db|memcache
 default[:magento][:app][:backend_cache] = "file" # apc|memcached|xcache|file
 default[:magento][:app][:backend_servers] = Array.new
 
+default[:magento][:apache][:unsecure_port] = 80
+default[:magento][:apache][:secure_port] = 443
 default[:magento][:apache][:servername] = "magento.development.local"
 default[:magento][:apache][:server_alias] = Array.new
 default[:magento][:apache][:docroot] = "/var/www"
 default[:magento][:apache][:path] = "/public"
+default[:magento][:apache][:developer_mode] = "false"
+default[:magento][:apache][:memory_limit] = "512M"
+default[:magento][:apache][:max_execution_time] = "60"
 
 default[:magento][:db][:host] = "127.0.0.1"
 default[:magento][:db][:database] = "magentodb"
@@ -31,6 +36,9 @@ default[:magento][:admin][:lastname] = "Admin"
 default[:magento][:admin][:email] = "chef@magento.com"
 default[:magento][:admin][:user] = "chef"
 default[:magento][:admin][:password] = '123123pass'
+
+# Custom XML Snippet
+default[:magento][:global][:custom] = ''
 
 default[:magento][:sample_data][:url] = "http://www.magentocommerce.com/downloads/assets/1.2.0/magento-sample-data-1.2.0.tar.gz"
 
