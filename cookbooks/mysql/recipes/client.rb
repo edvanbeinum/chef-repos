@@ -23,15 +23,22 @@ package "mysql-devel" do
     ["debian", "ubuntu"] => { "default" => 'libmysqlclient-dev' },
     "default" => 'libmysqlclient-dev'
   )
+  if File.exists?("/etc/yum.repos.d/ius.repo")
+      package_name "mysql55-devel"
+  end
   action :install
 end
 
 package "mysql-client" do
-  package_name value_for_platform(
-    ["centos", "redhat", "suse", "fedora"] => { "default" => "mysql" },
-    ["debian", "ubuntu"] => { "default" => 'mysql-client' },
-    "default" => 'mysql-client'
-  )
+    package_name value_for_platform(
+        ["centos", "redhat", "suse", "fedora"] => { "default" => "mysql" },
+        ["debian", "ubuntu"] => { "default" => 'mysql-client' },
+        "default" => 'mysql-client'
+      )
+    if File.exists?("/etc/yum.repos.d/ius.repo")
+        package_name "mysql55"
+    end
+  
   action :install
 end
 

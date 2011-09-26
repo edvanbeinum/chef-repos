@@ -57,8 +57,14 @@ if platform?(%w{debian ubuntu})
 
 end
 
-package "mysql-server" do
-  action :install
+if File.exists?("/etc/yum.repos.d/ius.repo")
+    package "mysql55-server" do
+      action :install
+    end
+else
+    package "mysql-server" do
+      action :install
+    end
 end
 
 service "mysql" do
