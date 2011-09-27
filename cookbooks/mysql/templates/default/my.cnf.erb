@@ -55,26 +55,33 @@ skip-external-locking
 # Instead of skip-networking the default is now to listen only on
 # localhost which is more compatible and is not less secure.
 #bind-address            = <%= node['mysql']['bind_address'] %>
+
+
 #
 # * Fine Tuning
 #
 key_buffer              = <%= node['mysql']['tunable']['key_buffer'] %>
-key_buffer_size         = <%= node['mysql']['tunable']['key_buffer_size'] %>
 max_allowed_packet      = <%= node['mysql']['tunable']['max_allowed_packet'] %>
 thread_stack            = <%= node['mysql']['tunable']['thread_stack'] %>
 thread_cache_size       = <%= node['mysql']['tunable']['thread_cache_size'] %>
 # This replaces the startup script and checks MyISAM tables if needed
 # the first time they are touched
 myisam-recover          = BACKUP
-
+#max_connections        = 100
+#table_cache            = 64
+#thread_concurrency     = 10
 max_connections         = <%= node['mysql']['tunable']['max_connections'] %>
-max_connect_errors      = <%= node['mysql']['tunable']['max_connect_errors'] %>
 wait_timeout            = <%= node['mysql']['tunable']['wait_timeout'] %>
 net_read_timeout        = <%= node['mysql']['tunable']['net_read_timeout'] %>
 net_write_timeout       = <%= node['mysql']['tunable']['net_write_timeout'] %>
 back_log                = <%= node['mysql']['tunable']['back_log'] %>
 table_cache             = <%= node['mysql']['tunable']['table_cache'] %>
 max_heap_table_size     = <%= node['mysql']['tunable']['max_heap_table_size'] %>
+
+
+# Additional Tuning
+key_buffer_size         = <%= node['mysql']['tunable']['key_buffer_size'] %>
+max_connect_errors      = <%= node['mysql']['tunable']['max_connect_errors'] %>
 sort_buffer_size        = <%= node['mysql']['tunable']['sort_buffer_size'] %>
 join_buffer_size        = <%= node['mysql']['tunable']['join_buffer_size'] %>
 tmp_table_size          = <%= node['mysql']['tunable']['tmp_table_size'] %>
@@ -82,6 +89,8 @@ read_buffer_size        = <%= node['mysql']['tunable']['read_buffer_size'] %>
 read_rnd_buffer_size    = <%= node['mysql']['tunable']['read_rnd_buffer_size'] %>
 bulk_insert_buffer_size = <%= node['mysql']['tunable']['bulk_insert_buffer_size'] %>
 # MYISAM config
+#
+#
 myisam_sort_buffer_size     = <%= node['mysql']['tunable']['myisam_sort_buffer_size'] %>
 myisam_max_sort_file_size   = <%= node['mysql']['tunable']['myisam_max_sort_file_size'] %>
 myisam_repair_threads       = <%= node['mysql']['tunable']['myisam_repair_threads'] %>
@@ -101,9 +110,9 @@ query_cache_size        = <%= node['mysql']['tunable']['query_cache_size'] %>
 # Error logging goes to syslog. This is a Debian improvement :)
 #
 # Here you can see queries with especially long duration
-log_slow_queries        = <%= node['mysql']['tunable']['log_slow_queries'] %>
-long_query_time         = <%= node['mysql']['tunable']['long_query_time'] %>
-log-queries-not-using-indexes
+# log_slow_queries        = <%= node['mysql']['tunable']['log_slow_queries'] %>
+# long_query_time         = <%= node['mysql']['tunable']['long_query_time'] %>
+# log-queries-not-using-indexes
 #
 # The following can be used as easy to replay backup logs or for replication.
 # note: if you are setting up a replication slave, see README.Debian about
@@ -122,11 +131,13 @@ read_only = <%= node['mysql']['read_only'] %>
 <% end %>
 
 
-expire_logs_days        = 10
-max_binlog_size         = 100M
+expire_logs_days        = <%= node['mysql']['tunable']['expire_logs_days'] %>
+max_binlog_size         = <%= node['mysql']['tunable']['max_binlog_size'] %>
+
 #binlog_do_db           = include_database_name
 #binlog_ignore_db       = include_database_name
-#
+
+
 # * InnoDB
 #
 # InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
@@ -134,6 +145,8 @@ max_binlog_size         = 100M
 # You might want to disable InnoDB to shrink the mysqld process by circa 100MB.
 #skip-innodb
 innodb_buffer_pool_size             = <%= node['mysql']['tunable']['innodb_buffer_pool_size'] %>
+
+# Additional Tuning
 innodb_additional_mem_pool_size     = <%= node['mysql']['tunable']['innodb_additional_mem_pool_size'] %>
 innodb_log_buffer_size              = <%= node['mysql']['tunable']['innodb_log_buffer_size'] %>
 innodb_log_file_size                = <%= node['mysql']['tunable']['innodb_log_file_size'] %>
@@ -181,10 +194,10 @@ quote-names
 # * BerkeleyDB
 #
 # Using BerkeleyDB is now discouraged as its support will cease in 5.1.12.
-skip-bdb
+# skip-bdb
 # Default to using old password format for compatibility with mysql 3.x
 # clients (those using the mysqlclient10 compatibility package).
-old_passwords           = <%= node['mysql']['old_passwords'] %>
+# old_passwords           = <%= node['mysql']['old_passwords'] %>
 
 <% else -%>
 #
