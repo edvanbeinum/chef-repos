@@ -18,32 +18,33 @@
 #
 
 include_recipe "mysql::server"
+if node[:mysql][:master]
+    mysql_database "create #{node[:magento][:db][:database]} database" do
+      host "localhost"
+      username "root"
+      password "#{node[:mysql][:server_root_password]}"
+      database "#{node[:magento][:db][:database]}"
+      action [:create_db]
+    end
 
-mysql_database "create #{node[:magento][:db][:database]} database" do
-  host "localhost"
-  username "root"
-  password "#{node[:mysql][:server_root_password]}"
-  database "#{node[:magento][:db][:database]}"
-  action [:create_db]
-end
+    grants_path = value_for_platform(
+      ["centos", "redhat", "suse", "fedora" ] => {
+        "default" => "/etc/mage-grants.sql"
+      },
+      "default" => "/etc/mysql/mage-grants.sql"
+    )
 
-grants_path = value_for_platform(
-  ["centos", "redhat", "suse", "fedora" ] => {
-    "default" => "/etc/mage-grants.sql"
-  },
-  "default" => "/etc/mysql/mage-grants.sql"
-)
+    template "/etc/mysql/mage-grants.sql" do
+      path grants_path
+      source "mage-grants.sql.erb"
+      owner "root"
+      group "root"
+      mode "0600"
+      variables(:database => node[:magento][:db])
+    end
 
-template "/etc/mysql/mage-grants.sql" do
-  path grants_path
-  source "mage-grants.sql.erb"
-  owner "root"
-  group "root"
-  mode "0600"
-  variables(:database => node[:magento][:db])
-end
-
-execute "mysql-install-mage-privileges" do
-    command "/usr/bin/mysql -u root #{node['mysql']['server_root_password'].empty? ? '' : '-p' }#{node['mysql']['server_root_password']} < #{grants_path}"
-    action :run
+    execute "mysql-install-mage-privileges" do
+        command "/usr/bin/mysql -u root #{node['mysql']['server_root_password'].empty? ? '' : '-p' }#{node['mysql']['server_root_password']} < #{grants_path}"
+        action :run
+    end
 end
