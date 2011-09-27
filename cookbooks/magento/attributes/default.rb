@@ -13,7 +13,10 @@ default[:magento][:app][:use_rewrites] = "yes"
 default[:magento][:app][:use_secure] = "yes"
 default[:magento][:app][:use_secure_admin] = "yes"
 default[:magento][:app][:multi_session_save] = "db" # files|db|memcache
+default[:magento][:app][:session_memcache_ip] = "127.0.0.1"
+default[:magento][:app][:session_memcache_port] = "11211"
 default[:magento][:app][:backend_cache] = "file" # apc|memcached|xcache|file
+default[:magento][:app][:slow_backend] = "database" # database|file
 default[:magento][:app][:backend_servers] = Array.new
 
 default[:magento][:apache][:unsecure_port] = 80
@@ -29,7 +32,8 @@ default[:magento][:apache][:max_execution_time] = "60"
 default[:magento][:db][:host] = "127.0.0.1"
 default[:magento][:db][:database] = "magentodb"
 default[:magento][:db][:username] = "magentouser"
-
+default[:magento][:db][:read][:host] = "127.0.0.1"
+default[:magento][:db][:write][:host] = "127.0.0.1"
 
 default[:magento][:admin][:firstname] = "Chef"
 default[:magento][:admin][:lastname] = "Admin"
