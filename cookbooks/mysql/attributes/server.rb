@@ -40,7 +40,7 @@ end
 default['mysql']['server_id'] = "1"
 default['mysql']['log_bin'] = "mysql-bin"
 # Master server config
-default['mysql']['master'] = false
+default['mysql']['master'] = true
 # Slave config
 default['mysql']['slave'] = false
 default['mysql']['relay_log'] = "mysql-relay-bin"
