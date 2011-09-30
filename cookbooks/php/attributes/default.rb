@@ -28,6 +28,7 @@ default['php']['html_errors'] = 'Off'
 default['php']['error_reporting'] = 'E_ALL'
 default['php']['date_timezone'] = 'Europe/London'
 default['php']['upload_max_filesize'] = '2M'
+default['php']['apc_shm_size'] = '32'
 
 case node["platform"]
 when "centos", "redhat", "fedora"

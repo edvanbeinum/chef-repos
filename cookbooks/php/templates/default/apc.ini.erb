@@ -4,7 +4,7 @@ extension=apc.so
 apc.enabled = 1
 apc.enable_cli=1
 
-apc.shm_size=256
+apc.shm_size=<%= node[:php][:apc_shm_size] %>
 apc.num_files_hint=10000
 apc.user_entries_hint=10000
 apc.max_file_size=5M
