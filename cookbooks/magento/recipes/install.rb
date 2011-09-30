@@ -54,4 +54,16 @@ cd #{node[:magento][:dir]}/ && \
 #{install}
 EOH
   end
+  
+    indexsite = <<-EOH
+php -f shell/indexer.php -- reindexall
+EOH
+
+    bash "magento-index-site" do
+        cwd "#{node[:magento][:dir]}/"
+        code <<-EOH
+cd #{node[:magento][:dir]}/ && \
+#{indexsite}
+EOH
+      end
 end

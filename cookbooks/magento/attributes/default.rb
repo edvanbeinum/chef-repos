@@ -26,8 +26,13 @@ default[:magento][:apache][:server_alias] = Array.new
 default[:magento][:apache][:docroot] = "/var/www"
 default[:magento][:apache][:path] = "/public"
 default[:magento][:apache][:developer_mode] = "false"
-default[:magento][:apache][:memory_limit] = "512M"
-default[:magento][:apache][:max_execution_time] = "60"
+
+
+default[:magento][:php][:memory_limit] = "512M"
+default[:magento][:php][:max_execution_time] = "120"
+default[:magento][:php][:display_errors] = "Off"
+default[:magento][:php][:html_errors] = "Off"
+default[:magento][:php][:upload_max_filesize] = '50M'
 
 default[:magento][:db][:host] = "127.0.0.1"
 default[:magento][:db][:database] = "magentodb"

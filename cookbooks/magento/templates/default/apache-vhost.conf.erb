@@ -78,8 +78,16 @@
         ## adjust memory limit
 
         #    php_value memory_limit 64M
-        php_value memory_limit <%= node[:magento][:apache][:memory_limit] %>
-        php_value max_execution_time <%= node[:magento][:apache][:max_execution_time] %>
+        php_value memory_limit <%= node[:magento][:php][:memory_limit] %>
+        
+        
+        ############################################
+        ## php tuning
+        
+        php_value max_execution_time <%= node[:magento][:php][:max_execution_time] %>
+        php_value display_errors <%= node[:magento][:php][:display_errors] %>
+        php_value html_errors <%= node[:magento][:php][:html_errors] %>
+        php_value upload_max_filesize <%= node[:magento][:php][:upload_max_filesize] %>
 
         ############################################
         ## disable magic quotes for php request vars
@@ -170,6 +178,8 @@
         ## path relative to web root
 
         #RewriteBase /
+        
+        RewriteRule ^server-status - [L]
 
         ############################################
         ## workaround for HTTP authorization
