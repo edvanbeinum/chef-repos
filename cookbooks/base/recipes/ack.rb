@@ -1,3 +1,3 @@
 package "ack-grep" do
-  action :upgrade
+  action :install
 end
